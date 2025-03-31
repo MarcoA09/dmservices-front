@@ -140,38 +140,52 @@ export const AuthProvider = ({ children }) => {
   };
   
 
-  useEffect(() => {
+ useEffect(() => {
     async function checkLogin() {
-     
-      const token = Cookies.get("token");
-    
-      if (token) {
-        try {
-          const res = await verifyTokenRequest(token);
-          if (!res.data) {
-            setIsAuthenticated(false);
-            setUser(null);
+        setLoading(true);
+
+        const tokenGoogle = Cookies.get("tokenGoogle");
+        const token = Cookies.get("token");
+
+        if (tokenGoogle) {
+            console.log("Autenticando con Google...");
+            setIsAuthenticated(true);
+            setUser({ googleUser: true });
             setLoading(false);
             return;
-          }
-          setIsAuthenticated(true);
-          setUser(res.data);
-        } catch (error) {
-          console.error("Error en validación del token:", error);
-          setIsAuthenticated(false);
-          setUser(null);
-        } finally {
-          setLoading(false);
         }
-        return;
-      }
-      setIsAuthenticated(false);
-      setUser(null);
-      setLoading(false);
+
+        if (token) {
+            try {
+                console.log("Verificando token JWT...");
+                const res = await verifyTokenRequest(); 
+                console.log("Respuesta del backend:", res.data);
+
+                if (!res.data) {
+                    throw new Error("No hay datos de usuario");
+                }
+
+                setIsAuthenticated(true);
+                setUser(res.data);
+            } catch (error) {
+                console.error("Error en validación del token:", error);
+                setIsAuthenticated(false);
+                setUser(null);
+            } finally {
+                setLoading(false);
+            }
+            return;
+        }
+
+        console.log("No se encontró ningún token, usuario no autenticado.");
+        setIsAuthenticated(false);
+        setUser(null);
+        setLoading(false);
     }
-  
+
     checkLogin();
-  }, []);
+}, []);
+
   
 
 
