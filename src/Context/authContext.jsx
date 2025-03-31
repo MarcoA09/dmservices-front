@@ -168,7 +168,7 @@ useEffect(() => {
         setLoading(true);
 
         const tokenGoogle = Cookies.get("tokenGoogle");
-        const token = Cookies.get("token");
+        const token = localStorage.getItem("token"); 
 
         console.log("Token de Google:", tokenGoogle); 
         console.log("Token JWT:", token); 
@@ -184,7 +184,7 @@ useEffect(() => {
         if (token) {
             try {
                 console.log("Verificando token JWT");  
-                const res = await verifyTokenRequest(); 
+                const res = await verifyTokenRequest(token);  
                 console.log("Respuesta del backend:", res.data);
 
                 if (!res.data) {
@@ -197,6 +197,7 @@ useEffect(() => {
                 console.error("Error en validación del token:", error);
                 setIsAuthenticated(false);
                 setUser(null);
+                localStorage.removeItem("token");  
             } finally {
                 setLoading(false);
             }
