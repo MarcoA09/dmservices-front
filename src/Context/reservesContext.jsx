@@ -24,7 +24,7 @@ export const ReservedProvider = ({ children }) => {
 
     useEffect(() => {
         // Establecer conexión WebSocket
-        ws.current = new WebSocket('wss://dmservices-front.vercel.app');
+        ws.current = new WebSocket('wss://dmservices-back.onrender.com');
         
         ws.current.onopen = () => {
             console.log('Conectado al WebSocket');
