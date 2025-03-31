@@ -169,17 +169,12 @@ const logout = async () => {
 
 useEffect(() => {
     async function checkLogin() {
-        console.log("Ejecutando checkLogin"); 
         setLoading(true);
 
         const tokenGoogle = Cookies.get("tokenGoogle");
         const token = localStorage.getItem("token"); 
 
-        console.log("Token de Google:", tokenGoogle); 
-        console.log("Token JWT:", token); 
-
         if (tokenGoogle) {
-            console.log("Autenticando con Google");
             setIsAuthenticated(true);
             setUser({ googleUser: true });
             setLoading(false);
@@ -188,10 +183,8 @@ useEffect(() => {
 
         if (token) {
             try {
-                console.log("Verificando token JWT");  
                 const res = await verifyTokenRequest(token);  
-                console.log("Respuesta del backend:", res.data);
-
+            
                 if (!res.data) {
                     throw new Error("No hay datos de usuario");
                 }
@@ -209,7 +202,6 @@ useEffect(() => {
             return;
         }
 
-        console.log("No se encontró ningún token, usuario no autenticado.");
         setIsAuthenticated(false);
         setUser(null);
         setLoading(false);
