@@ -1,4 +1,4 @@
-import axios from "./axios";
+import axios from "../api/axios";
 
 export const loginRequest = async (user) => axios.post(`/api/login`, user);
 
