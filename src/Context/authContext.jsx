@@ -46,7 +46,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   
-  const signin = async (user) => {
+  /*const signin = async (user) => {
     try {
       const res = await loginRequest(user);
       setUser(res.data);
@@ -55,7 +55,27 @@ export const AuthProvider = ({ children }) => {
     } catch (error) {
       setErrors(error.response?.data?.message || ["Error de autenticación"]);
     }
-  };
+  }; */
+
+  const signin = async (user) => {
+    try {
+        const res = await loginRequest(user);
+
+        if (res.data.token) {
+            Cookies.set("token", res.data.token, { 
+                secure: true, 
+                sameSite: "None",
+                path: "/"
+            });
+        }
+
+        setUser(res.data);
+        setIsAuthenticated(true);
+        setRegisterMessage(res.data.message[0]);
+    } catch (error) {
+        setErrors(error.response?.data?.message || ["Error de autenticación"]);
+    }
+};
 
   const loginWithGoogle = async () => {
     try {
