@@ -7,7 +7,13 @@ export const registerRequest = async (user) => axios.post(`/api/register`, user)
 
 export const logoutRequest  = async () => axios.post(`/api/logout`);
 
-export const verifyTokenRequest = () => axios.get(`/verify`, { withCredentials: true });
+//export const verifyTokenRequest = () => axios.get(`/verify`, { withCredentials: true });
+export const verifyTokenRequest = () => {
+    const token = localStorage.getItem("token");
+    return axios.get(`/verify`, { 
+        headers: { Authorization: `Bearer ${token}` }
+    });
+};
 
   export const requestPasswordReset = async (email) => {
     try {
