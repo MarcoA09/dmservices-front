@@ -7,10 +7,14 @@ export const registerRequest = async (user) => axios.post(`/api/register`, user)
 
 export const logoutRequest  = async () => axios.post(`/api/logout`);
 
-export const verifyTokenRequest = () => axios.get(`/api/verify`, {
-    withCredentials: true,
-});
-
+export const verifyTokenRequest = async () => {
+  try {
+    const res = await axios.get(`/verify`);
+    return res;
+  } catch (error) {
+    throw error; 
+  }
+};
 
   export const requestPasswordReset = async (email) => {
     try {
