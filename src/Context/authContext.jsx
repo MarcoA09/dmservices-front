@@ -140,12 +140,16 @@ export const AuthProvider = ({ children }) => {
   };
   
 
- useEffect(() => {
+useEffect(() => {
     async function checkLogin() {
+        console.log("Ejecutando checkLogin..."); 
         setLoading(true);
 
         const tokenGoogle = Cookies.get("tokenGoogle");
         const token = Cookies.get("token");
+
+        console.log("Token de Google:", tokenGoogle); 
+        console.log("Token JWT:", token); 
 
         if (tokenGoogle) {
             console.log("Autenticando con Google...");
@@ -157,7 +161,7 @@ export const AuthProvider = ({ children }) => {
 
         if (token) {
             try {
-                console.log("Verificando token JWT...");
+                console.log("Verificando token JWT...");  
                 const res = await verifyTokenRequest(); 
                 console.log("Respuesta del backend:", res.data);
 
@@ -185,6 +189,7 @@ export const AuthProvider = ({ children }) => {
 
     checkLogin();
 }, []);
+
 
   
 
