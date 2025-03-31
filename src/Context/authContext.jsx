@@ -36,6 +36,7 @@ export const AuthProvider = ({ children }) => {
     try {
       const res = await registerRequest(user);
       if (res.status === 201) {
+        localStorage.setItem("token", res.data.token);
         setUser(res.data);
         setIsAuthenticated(true);
         setRegisterMessage(res.data.message[0]);
@@ -49,6 +50,7 @@ export const AuthProvider = ({ children }) => {
 const signin = async (user) => {
     try {
       const res = await loginRequest(user);
+      localStorage.setItem("token", res.data.token);
       setUser(res.data);
       setIsAuthenticated(true);
       setRegisterMessage(res.data.message[0]);
