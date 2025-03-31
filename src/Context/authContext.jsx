@@ -148,18 +148,23 @@ const signin = async (user) => {
     };
 
 
-  const logout = async () => {
+const logout = async () => {
     try {
-      await logoutRequest();
-      Cookies.remove("token"); 
-      Cookies.remove("tokenGoogle");
-  
-      setUser(null);
-      setIsAuthenticated(false);
+        await logoutRequest(); 
+
+        Cookies.remove("token");
+        Cookies.remove("tokenGoogle");
+        localStorage.removeItem("token");
+
+        setUser(null);
+        setIsAuthenticated(false);
+
+        console.log("Sesión cerrada: token eliminado de cookies y localStorage.");
     } catch (error) {
-      console.error("Error al cerrar sesión:", error);
+        console.error("Error al cerrar sesión:", error);
     }
-  };
+};
+
   
 
 useEffect(() => {
