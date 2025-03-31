@@ -142,15 +142,9 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     async function checkLogin() {
-      const tokenGoogle = Cookies.get("tokenGoogle");
+     
       const token = Cookies.get("token");
-      if (tokenGoogle) {
-        setIsAuthenticated(true);
-        setUser({ googleUser: true }); 
-        setLoading(false);
-        return;
-      }
-  
+    
       if (token) {
         try {
           const res = await verifyTokenRequest(token);
