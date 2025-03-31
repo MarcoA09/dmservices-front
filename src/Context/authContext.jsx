@@ -46,7 +46,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   
-  /*const signin = async (user) => {
+const signin = async (user) => {
     try {
       const res = await loginRequest(user);
       setUser(res.data);
@@ -55,9 +55,9 @@ export const AuthProvider = ({ children }) => {
     } catch (error) {
       setErrors(error.response?.data?.message || ["Error de autenticación"]);
     }
-  }; */
+  };
 
-  const signin = async (user) => {
+    /* const signin = async (user) => {
     try {
         const res = await loginRequest(user);
 
@@ -75,7 +75,7 @@ export const AuthProvider = ({ children }) => {
     } catch (error) {
         setErrors(error.response?.data?.message || ["Error de autenticación"]);
     }
-};
+}; */
 
   const loginWithGoogle = async () => {
     try {
@@ -162,7 +162,7 @@ export const AuthProvider = ({ children }) => {
 
 useEffect(() => {
     async function checkLogin() {
-        console.log("Ejecutando checkLogin..."); 
+        console.log("Ejecutando checkLogin"); 
         setLoading(true);
 
         const tokenGoogle = Cookies.get("tokenGoogle");
@@ -172,7 +172,7 @@ useEffect(() => {
         console.log("Token JWT:", token); 
 
         if (tokenGoogle) {
-            console.log("Autenticando con Google...");
+            console.log("Autenticando con Google");
             setIsAuthenticated(true);
             setUser({ googleUser: true });
             setLoading(false);
@@ -181,7 +181,7 @@ useEffect(() => {
 
         if (token) {
             try {
-                console.log("Verificando token JWT...");  
+                console.log("Verificando token JWT");  
                 const res = await verifyTokenRequest(); 
                 console.log("Respuesta del backend:", res.data);
 
