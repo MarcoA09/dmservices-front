@@ -123,7 +123,7 @@ export const LoginPage = () => {
         Registrar
           </a>
         
-           <LoginWithGoogle /> 
+        
           <p className='sm:py-3 my-1 text-center text-xs'>¿Olvidaste tu contraseña?<a href='/forgot-password' className='text-amber-300'> Recuperar cuenta</a></p>
 
         
