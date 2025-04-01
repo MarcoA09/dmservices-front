@@ -6,7 +6,7 @@ import Swal from "sweetalert2";
 
 export const RegisterPage = () => {
         const {register, handleSubmit, formState: {errors}, setError} = useForm();
-        const { signup, user, registerMessage, logout, errors: registerErrors, isAuthenticated } = useAuth();
+        const { signup, user, registerMessage, logout, errors: registerErrors, isAuthenticated, verifyEmail } = useAuth();
         const navigate = useNavigate();
 
         
@@ -25,28 +25,18 @@ export const RegisterPage = () => {
             });
           }
         }, [registerErrors]); 
-/* 
-        useEffect(() => {
-          if (isAuthenticated) {
-            Swal.fire({
-              title: "¡Registro Exitoso!",
-              text: registerMessage || "El usuario fue creado exitosamente, será redirigo.",
-              icon: "success",
-              confirmButtonText: "OK",
-            }).then((result) => {
-              if (result.isConfirmed) {
-                navigate('/welcome');
 
-              } 
-            });
-          }
-        }, [isAuthenticated, registerMessage, navigate]); */
 
         useEffect(() => {
-          if (isAuthenticated) {
-            navigate("/welcome");
+          if (registerMessage) {
+              Swal.fire({
+                  icon: "info",
+                  title: "Registro exitoso",
+                  text: registerMessage,
+                  confirmButtonText: "OK",
+              });
           }
-        }, [isAuthenticated]); 
+      }, [registerMessage]);
 
   return (
     <div className='w-screen h-screen flex items-center justify-center'>
@@ -128,8 +118,18 @@ export const RegisterPage = () => {
           clipRule="evenodd" />
       </svg>
       </div>
-      <input type="password" {...register("password", { required: "La password es requerida" })} 
-      className="grow h-12 w-full pl-10 bg-black/10 rounded-full border border-zinc-700 focus:outline-none focus:border-[#ff0080] text-white" placeholder="Password" />
+      <input 
+  type="password" 
+  {...register("password", { 
+    required: "La contraseña es requerida",
+    minLength: {
+      value: 6,
+      message: "La contraseña debe tener al menos 6 caracteres"
+    }
+  })} 
+  className="grow h-12 w-full pl-10 bg-black/10 rounded-full border border-zinc-700 focus:outline-none focus:border-[#ff0080] text-white" 
+  placeholder="Password" 
+/>
      
     </label>
     {errors.password && <p className='text-red-500 text-[11px]'>{errors.password.message}</p>}
@@ -142,6 +142,10 @@ export const RegisterPage = () => {
               <a href="/login" className='btn btn-wide bg-gradient-to-r from-[#ff0080] to-[#a10151] hover:bg-gradient-to-r hover:from-[#b8025d] hover:to-[#781685] px-3 py-2 border-0 text-white font-bold hover:bg-purple-800 sm:px-8 sm:py-3 rounded-4xl my-1 shadow-none h-12'>
             Regresar
               </a>
+
+              <button onClick={() => verifyEmail(user.email)}>
+  Ya verifiqué mi correo
+</button>
              
         </div>
     </form>
@@ -149,3 +153,4 @@ export const RegisterPage = () => {
     </div>
   )
 }
+
