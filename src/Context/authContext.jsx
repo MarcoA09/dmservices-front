@@ -1,5 +1,5 @@
 import { useEffect, useState, createContext, useContext } from "react";
-import { loginRequest, registerRequest, verifyTokenRequest, logoutRequest, requestContactForm, registerSubsRequest, requestPasswordReset, resetPassword  } from "../api/auth";
+import { loginRequest, registerRequest, verifyTokenRequest, logoutRequest, requestContactForm, registerSubsRequest, requestPasswordReset, resetPassword, verifyEmailRequest  } from "../api/auth";
 import Cookies from "js-cookie";
 import { getAuth, onAuthStateChanged, GoogleAuthProvider, signOut, signInWithPopup } from "firebase/auth";
 
@@ -36,20 +36,32 @@ export const AuthProvider = ({ children }) => {
     try {
       const res = await registerRequest(user);
       if (res.status === 201) {
-        localStorage.setItem("token", res.data.token);
-        setUser(res.data);
+       /*  setUser(res.data);
         setIsAuthenticated(true);
-        setRegisterMessage(res.data.message[0]);
+        setRegisterMessage(res.data.message[0]); */
+        setRegisterMessage("Revisa tu correo para verificar tu cuenta antes de iniciar sesión.");
       } 
     } catch (error) {
       setErrors(error.response?.data?.message || ["Error de registro"]);
     }
   };
 
+  const verifyEmail = async (email) => {
+    try {
+        const res = await verifyEmailRequest(email);
+        if (res.data.success) {
+        
+            setUser((prev) => ({ ...prev, emailVerified: true })); // Actualiza el estado global
+        }
+    } catch (error) {
+        console.error("Error verificando el correo:", error);
+    }
+};
   
-const signin = async (user) => {
+  const signin = async (user) => {
     try {
       const res = await loginRequest(user);
+      console.log("El token de respuesta", res.data.token)
       localStorage.setItem("token", res.data.token);
       setUser(res.data);
       setIsAuthenticated(true);
@@ -58,26 +70,6 @@ const signin = async (user) => {
       setErrors(error.response?.data?.message || ["Error de autenticación"]);
     }
   };
-
-    /* const signin = async (user) => {
-    try {
-        const res = await loginRequest(user);
-
-        if (res.data.token) {
-            Cookies.set("token", res.data.token, { 
-                secure: true, 
-                sameSite: "None",
-                path: "/"
-            });
-        }
-
-        setUser(res.data);
-        setIsAuthenticated(true);
-        setRegisterMessage(res.data.message[0]);
-    } catch (error) {
-        setErrors(error.response?.data?.message || ["Error de autenticación"]);
-    }
-}; */
 
   const loginWithGoogle = async () => {
     try {
@@ -148,69 +140,58 @@ const signin = async (user) => {
     };
 
 
-const logout = async () => {
-    try {
-        await logoutRequest(); 
-
-        Cookies.remove("token");
-        Cookies.remove("tokenGoogle");
-        localStorage.removeItem("token");
-
-        setUser(null);
-        setIsAuthenticated(false);
-
-        console.log("Sesión cerrada: token eliminado de cookies y localStorage.");
-    } catch (error) {
-        console.error("Error al cerrar sesión:", error);
-    }
-};
-
+    const logout = async () => {
+      try {
+          await logoutRequest(); 
   
+          Cookies.remove("token");
+          localStorage.removeItem("token");
+  
+          setUser(null);
+          setIsAuthenticated(false);
+  
+          console.log("Sesión cerrada: token eliminado de cookies y localStorage.");
+      } catch (error) {
+          console.error("Error al cerrar sesión:", error);
+      }
+  };
 
-useEffect(() => {
+  useEffect(() => {
     async function checkLogin() {
-        setLoading(true);
-
-        const tokenGoogle = Cookies.get("tokenGoogle");
-        const token = localStorage.getItem("token"); 
-
-        if (tokenGoogle) {
-            setIsAuthenticated(true);
-            setUser({ googleUser: true });
-            setLoading(false);
-            return;
-        }
-
-        if (token) {
-            try {
-                const res = await verifyTokenRequest(token);  
-            
-                if (!res.data) {
-                    throw new Error("No hay datos de usuario");
-                }
-
-                setIsAuthenticated(true);
-                setUser(res.data);
-            } catch (error) {
-                console.error("Error en validación del token:", error);
-                setIsAuthenticated(false);
-                setUser(null);
-                localStorage.removeItem("token");  
-            } finally {
-                setLoading(false);
-            }
-            return;
-        }
-
-        setIsAuthenticated(false);
-        setUser(null);
-        setLoading(false);
-    }
-
+      const token = localStorage.getItem("token");
+      if (!token) {
+          setIsAuthenticated(false);
+          setUser(null);
+          setLoading(false);
+          return;
+      }
+  
+      try {
+          const res = await verifyTokenRequest(token);
+  
+          if (!res.data || !res.data.emailVerified) {
+              setIsAuthenticated(false);
+              setUser(null);
+              setLoading(false);
+              alert("Debes verificar tu correo antes de acceder.");
+              return;
+          }
+  
+          setIsAuthenticated(true);
+          setUser(res.data);
+  
+      } catch (error) {
+          console.error("Error en validación del token:", error);
+          setIsAuthenticated(false);
+          setUser(null);
+      } finally {
+          setLoading(false);
+      }
+  }
+  
     checkLogin();
-}, []);
-
-
+  }, []);
+  
   
 
 
@@ -225,6 +206,7 @@ useEffect(() => {
         registerSubs,
         forgotPassword,
         handleResetPassword,
+        verifyEmail,
         isAuthenticated,
         errors,
         loading,
