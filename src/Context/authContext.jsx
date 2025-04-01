@@ -51,7 +51,7 @@ export const AuthProvider = ({ children }) => {
         const res = await verifyEmailRequest(email);
         if (res.data.success) {
         
-            setUser((prev) => ({ ...prev, emailVerified: true })); // Actualiza el estado global
+            setUser((prev) => ({ ...prev, emailVerified: true })); 
         }
     } catch (error) {
         console.error("Error verificando el correo:", error);
@@ -61,7 +61,6 @@ export const AuthProvider = ({ children }) => {
   const signin = async (user) => {
     try {
       const res = await loginRequest(user);
-      console.log("El token de respuesta", res.data.token)
       localStorage.setItem("token", res.data.token);
       setUser(res.data);
       setIsAuthenticated(true);
@@ -143,14 +142,11 @@ export const AuthProvider = ({ children }) => {
     const logout = async () => {
       try {
           await logoutRequest(); 
-  
           Cookies.remove("token");
           localStorage.removeItem("token");
-  
           setUser(null);
           setIsAuthenticated(false);
   
-          console.log("Sesión cerrada: token eliminado de cookies y localStorage.");
       } catch (error) {
           console.error("Error al cerrar sesión:", error);
       }
@@ -173,7 +169,6 @@ export const AuthProvider = ({ children }) => {
               setIsAuthenticated(false);
               setUser(null);
               setLoading(false);
-              alert("Debes verificar tu correo antes de acceder.");
               return;
           }
   
