@@ -15,6 +15,7 @@ import { ForgotPassword } from './Pages/ForgotPassword/ForgotPassword'
 import  ProtectedRoute  from "./ProtectedRoute";
 import { MyReservsPage } from './Pages/MyReservsPage/MyReservsPage'
 import ResetPassword from './Pages/ResetPassword/ResetPassword'
+import VerifyEmail from './Pages/VerifyEmail/VerifyEmail'
 
 function App() {
 
@@ -29,6 +30,7 @@ function App() {
           <Route path="/reset-password/:token" element={<ResetPassword />} />
           <Route path='/register' element={<RegisterPage/>} />
            <Route path='/dashboard' element={<DashboardPage/>} />
+            <Route path='/verify-email' element={<VerifyEmail/>} />
             <Route element={<ProtectedRoute />}>
                 <Route path='/profile' element={<ProfilePage/>} />
                 <Route path='/welcome' element={<WelcomePage/>} />
