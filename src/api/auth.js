@@ -5,6 +5,9 @@ export const loginRequest = async (user) => axios.post(`/api/login`, user);
 
 export const registerRequest = async (user) => axios.post(`/api/register`, user);
 
+export const verifyEmailRequest = async (email) =>
+  axios.post(`/api/verify-email`, { email });
+
 export const logoutRequest  = async () => axios.post(`/api/logout`);
 
 //export const verifyTokenRequest = () => axios.get(`/verify`, { withCredentials: true });
