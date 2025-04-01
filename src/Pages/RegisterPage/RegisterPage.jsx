@@ -83,7 +83,7 @@ export const RegisterPage = () => {
       </svg>
       </div>
       <input type="text" {...register("email", { required: "El email es requerido" })} 
-      className="grow h-12 w-full pl-10 bg-black/10 rounded-full border border-zinc-700 focus:outline-none focus:border-[#ff0080] text-white" placeholder="Email" />
+      className="grow h-12 w-full pl-10 bg-black/10 rounded-full border border-zinc-700 focus:outline-none focus:border-[#ff0080] text-white" placeholder="Email valido" />
       
     </label>
     {errors.email && <p className='text-red-500 text-[11px]'>{errors.email.message}</p>}
@@ -142,10 +142,6 @@ export const RegisterPage = () => {
               <a href="/login" className='btn btn-wide bg-gradient-to-r from-[#ff0080] to-[#a10151] hover:bg-gradient-to-r hover:from-[#b8025d] hover:to-[#781685] px-3 py-2 border-0 text-white font-bold hover:bg-purple-800 sm:px-8 sm:py-3 rounded-4xl my-1 shadow-none h-12'>
             Regresar
               </a>
-
-              <button onClick={() => verifyEmail(user.email)}>
-  Ya verifiqué mi correo
-</button>
              
         </div>
     </form>
